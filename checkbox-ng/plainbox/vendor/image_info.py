@@ -120,18 +120,20 @@ def dcd_string_to_info(dcd_string):
     return info
 
 
-def dcd_string_to_info_iot(dcd_string: str) -> dict:
+def dcd_string_to_info_iot(dcd_string):
     """
     Convert IoT's dcd string to a URL based on specified rules.
 
     # Regex pattern:
     ^canonical-oem- : Must start with "canonical-oem-"
     ([a-zA-Z0-9]+) : Project name (alphanumeric, mandatory)
-    :([a-zA-Z0-9-]*) : Series (alphanumeric and dash, optional)
+    :([a-zA-Z0-9-]+) : Series (alphanumeric and dash, mandatory)
     :([0-9.-]+) : Build ID (numbers, dot, dash, mandatory)
-    (:(.*))? : Additional info (anything, optional)
+    (:(.*))? : Additional info (anything, optional) - currently unused
     """
-    pattern = r'^canonical-oem-([a-zA-Z0-9]+):([a-zA-Z0-9-]*):([0-9.-]+)(:(.*))?$'
+    pattern = (
+        r"^canonical-oem-([a-zA-Z0-9]+):([a-zA-Z0-9-]+):([0-9.-]+)(:(.*))?$"
+    )
 
     match = re.match(pattern, dcd_string)
     if not match:
@@ -142,22 +144,14 @@ def dcd_string_to_info_iot(dcd_string: str) -> dict:
     info = {
         "base_url": BASE_URL,
         "project": project_name,
+        "series": series,
         "build_id": build_id,
     }
 
-    # Add optional fields if present
-    if series:
-        info["series"] = series
-    if additional_info:
-        info["additional_info"] = additional_info
-
-    # Construct the URL based on whether series is present
-    if series:
-        image_name = f"{project_name}-{series}-{build_id}.tar.xz"
-        info["url"] = f"{BASE_URL}/{project_name}/share/{series}/{build_id}/{image_name}"
-    else:
-        image_name = f"{project_name}-{build_id}.tar.xz"
-        info["url"] = f"{BASE_URL}/{project_name}/share/{build_id}/{image_name}"
+    image_name = f"{project_name}-{series}-{build_id}.tar.xz"
+    info["url"] = (
+        f"{BASE_URL}/{project_name}/share/{series}/{build_id}/{image_name}"
+    )
 
     return info
 
