@@ -120,7 +120,7 @@ def dcd_string_to_info(dcd_string):
     return info
 
 
-def dcd_string_to_info_iot(dcd_string: str) -> dict:
+def dcd_string_to_info_iot(dcd_string):
     """
     Convert IoT's dcd string to a URL based on specified rules.
 
