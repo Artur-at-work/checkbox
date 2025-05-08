@@ -131,7 +131,9 @@ def dcd_string_to_info_iot(dcd_string):
     :([0-9.-]+) : Build ID (numbers, dot, dash, mandatory)
     (:(.*))? : Additional info (anything, optional) - currently unused
     """
-    pattern = r'^canonical-oem-([a-zA-Z0-9]+):([a-zA-Z0-9-]+):([0-9.-]+)(:(.*))?$'
+    pattern = (
+        r"^canonical-oem-([a-zA-Z0-9]+):([a-zA-Z0-9-]+):([0-9.-]+)(:(.*))?$"
+    )
 
     match = re.match(pattern, dcd_string)
     if not match:
@@ -147,7 +149,9 @@ def dcd_string_to_info_iot(dcd_string):
     }
 
     image_name = f"{project_name}-{series}-{build_id}.tar.xz"
-    info["url"] = f"{BASE_URL}/{project_name}/share/{series}/{build_id}/{image_name}"
+    info["url"] = (
+        f"{BASE_URL}/{project_name}/share/{series}/{build_id}/{image_name}"
+    )
 
     return info
 
